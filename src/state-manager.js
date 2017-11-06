@@ -57,6 +57,12 @@ export default class StateManager extends EventEmitter {
    *
    *   * `beforeEach` — `function(ctx) => Promise` invoked
    *     before each `enter` hook
+   *
+   *   * `afterEach` — `function(ctx) => Promise` invoked
+   *     after each `enter` hook
+   *
+   *   * `wildcardState` — state name that will act as a wildcard
+   *     for unmatched URLs
    */
   constructor(spec) {
     super();
@@ -100,6 +106,9 @@ export default class StateManager extends EventEmitter {
     }
     this.maxRedirects = Number(spec.maxRedirects) || 10;
     this.activeClass = spec.activeClass || 'active';
+    if (spec.wildcardState) {
+      this.wildcardState = spec.wildcardState;
+    }
   }
 
   _setupHooks(spec) {
@@ -343,6 +352,14 @@ export default class StateManager extends EventEmitter {
       console.warn('No states match URL: ' + location.pathname);
       /* eslint-enable no-console */
       this._updateHistory(true);
+      if (this.wildcardState) {
+        debug('no url match: using wildcardState');
+        this.go({
+          name: this.wildcardState,
+          params: {path: location.pathname},
+          replace: true
+        });
+      }
     }
   }
 

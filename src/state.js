@@ -287,7 +287,7 @@ export default class State {
    * @private
    */
   _makeUrl(params) {
-    return this._pathFormat(params) + this._makeSearch(params);
+    return this._pathFormat(params, {encode: this.customURIEncode}) + this._makeSearch(params);
   }
 
   /**

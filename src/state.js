@@ -301,4 +301,16 @@ export default class State {
     return this.manager.history.createHref(this._makeUrl(params));
   }
 
+  /**
+   *
+   * @param value {string}
+   * @returns {string}
+   */
+  customURIEncode(value) {
+    const baseDomain = window.location.origin + '/'
+    const encoded = encodeURI(baseDomain + value)
+    const particle = encoded.replace(baseDomain, '')
+    return particle
+  }
+
 };
